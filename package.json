@@ -1,0 +1,36 @@
+{
+  "dependencies": {
+    "@nestjs/mapped-types": "*"
+  },
+  "name": "logistica-backend",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "gateway",
+    "auth-service",
+    "registry-service",
+    "operations-service",
+    "documents-service",
+    "notifications-service",
+    "shared"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev:gateway": "npm run start:dev --workspace=gateway",
+    "dev:auth": "npm run start:dev --workspace=auth-service",
+    "dev:registry": "npm run start:dev --workspace=registry-service",
+    "dev:operations": "npm run start:dev --workspace=operations-service",
+    "dev:documents": "npm run start:dev --workspace=documents-service",
+    "dev:notifications": "npm run start:dev --workspace=notifications-service",
+    "dev:all": "concurrently \"npm:dev:*\"",
+    "prisma:generate": "npm run prisma:generate --workspaces",
+    "prisma:migrate": "npm run prisma:migrate --workspaces"
+    ,
+    "seed:db": "npm --workspace registry-service run seed:db && npm --workspace auth-service run seed:db"
+  },
+  "author": "Heger Valesin",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  postgres-auth:
+    image: postgres:16-alpine
+    container_name: postgres-auth
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: enzo2003*
+      POSTGRES_DB: auth_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-auth-data:/var/lib/postgresql/data
+
+  postgres-registry:
+    image: postgres:16-alpine
+    container_name: postgres-registry
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: enzo2003*
+      POSTGRES_DB: registry_db
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres-registry-data:/var/lib/postgresql/data
+
+  postgres-operations:
+    image: postgres:16-alpine
+    container_name: postgres-operations
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: enzo2003*
+      POSTGRES_DB: operations_db
+    ports:
+      - '5434:5432'
+    volumes:
+      - postgres-operations-data:/var/lib/postgresql/data
+
+  postgres-documents:
+    image: postgres:16-alpine
+    container_name: postgres-documents
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: enzo2003*
+      POSTGRES_DB: documents_db
+    ports:
+      - '5435:5432'
+    volumes:
+      - postgres-documents-data:/var/lib/postgresql/data
+
+  postgres-notifications:
+    image: postgres:16-alpine
+    container_name: postgres-notifications
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: enzo2003*
+      POSTGRES_DB: notifications_db
+    ports:
+      - '5436:5432'
+    volumes:
+      - postgres-notifications-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+
+volumes:
+  postgres-auth-data:
+  postgres-registry-data:
+  postgres-operations-data:
+  postgres-documents-data:
+  postgres-notifications-data:
+  redis-data:
