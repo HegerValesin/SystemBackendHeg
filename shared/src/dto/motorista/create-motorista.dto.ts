@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional, IsEmail, IsUUID, Matches, IsDateString } from 'class-validator';
+import {IsString, IsNotEmpty, IsOptional, IsEmail, IsUUID, Matches, IsDateString, IsBoolean} from 'class-validator';
+import {Column} from "typeorm";
 
 export class CreateMotoristaDto {
   @IsString()
@@ -46,6 +47,10 @@ export class CreateMotoristaDto {
   @IsString()
   @IsOptional()
   cep?: string;
+
+  @Column({ default: true }) // VERIFIQUE SE ESTA LINHA EXISTE
+  @IsBoolean()
+  ativo!: boolean;
 
   @IsUUID()
   @IsNotEmpty({ message: 'TransportadoraId é obrigatório' })

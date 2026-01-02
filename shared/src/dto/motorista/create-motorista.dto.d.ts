@@ -10,5 +10,6 @@ export declare class CreateMotoristaDto {
     cidade?: string;
     estado?: string;
     cep?: string;
+    ativo: boolean;
     transportadoraId: string;
 }

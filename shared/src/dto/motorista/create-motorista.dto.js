@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateMotoristaDto = void 0;
 const class_validator_1 = require("class-validator");
+const typeorm_1 = require("typeorm");
 class CreateMotoristaDto {
     cpf;
     nome;
@@ -23,6 +24,7 @@ class CreateMotoristaDto {
     cidade;
     estado;
     cep;
+    ativo;
     transportadoraId;
 }
 exports.CreateMotoristaDto = CreateMotoristaDto;
@@ -83,6 +85,11 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateMotoristaDto.prototype, "cep", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: true }),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CreateMotoristaDto.prototype, "ativo", void 0);
 __decorate([
     (0, class_validator_1.IsUUID)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'TransportadoraId é obrigatório' }),

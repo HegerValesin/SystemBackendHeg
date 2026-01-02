@@ -1,7 +1,13 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateVeiculoDto } from './create-veiculo.dto';
-import type { UUID } from 'crypto';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateVeiculoDto extends PartialType(CreateVeiculoDto) {
-  id!: UUID;
+  @IsBoolean()
+  @IsOptional()
+  ativo?: boolean;
+
+  @IsString()
+  @IsOptional()
+  placa?: string;
 }
