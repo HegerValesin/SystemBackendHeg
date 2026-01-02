@@ -9,4 +9,5 @@ export declare class CreateClienteDto {
     estado?: string;
     cep?: string;
     transportadoraId: string;
+    ativo: boolean;
 }

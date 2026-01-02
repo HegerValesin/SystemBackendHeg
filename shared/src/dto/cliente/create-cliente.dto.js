@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateClienteDto = void 0;
 const class_validator_1 = require("class-validator");
+const typeorm_1 = require("typeorm");
 class CreateClienteDto {
     cnpjCpf;
     razaoSocial;
@@ -22,6 +23,7 @@ class CreateClienteDto {
     estado;
     cep;
     transportadoraId;
+    ativo;
 }
 exports.CreateClienteDto = CreateClienteDto;
 __decorate([
@@ -75,4 +77,9 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'TransportadoraId é obrigatório' }),
     __metadata("design:type", String)
 ], CreateClienteDto.prototype, "transportadoraId", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: true }),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CreateClienteDto.prototype, "ativo", void 0);
 //# sourceMappingURL=create-cliente.dto.js.map

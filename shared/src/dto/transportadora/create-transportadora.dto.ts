@@ -15,6 +15,14 @@ export class CreateTransportadoraDto {
   @IsOptional()
   nomeFantasia?: string;
 
+  @IsString()
+  @IsOptional()
+  iE?: string;
+  
+  @IsString()
+  @IsOptional()
+  iM?: string;
+
   @Column({ default: true }) // VERIFIQUE SE ESTA LINHA EXISTE
   @IsBoolean()
   ativo!: boolean;
@@ -24,13 +32,34 @@ export class CreateTransportadoraDto {
   @Matches(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/, { message: 'Telefone inválido' })
   telefone?: string;
 
+   @IsString()
+  @IsOptional()
+  @Matches(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/, { message: 'Celular inválido' })
+  celular?: string;
+
   @IsEmail({}, { message: 'Email inválido' })
   @IsOptional()
   email?: string;
 
   @IsString()
   @IsOptional()
+  site?: string;
+  
+  @IsString()
+  @IsOptional()
   endereco?: string;
+
+  @IsString()
+  @IsOptional()
+  numero?: string;
+
+  @IsString()
+  @IsOptional()
+  bairro?: string;
+
+  @IsString()
+  @IsOptional()
+  complemento?: string;
 
   @IsString()
   @IsOptional()
@@ -45,4 +74,9 @@ export class CreateTransportadoraDto {
   @IsOptional()
   @Matches(/^\d{5}-?\d{3}$/, { message: 'CEP inválido' })
   cep?: string;
+
+  @IsString()
+  @IsOptional()
+  observacao?: string;
+
 }

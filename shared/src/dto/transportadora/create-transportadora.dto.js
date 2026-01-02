@@ -16,13 +16,21 @@ class CreateTransportadoraDto {
     cnpj;
     razaoSocial;
     nomeFantasia;
+    iE;
+    iM;
     ativo;
     telefone;
+    celular;
     email;
+    site;
     endereco;
+    numero;
+    bairro;
+    complemento;
     cidade;
     estado;
     cep;
+    observacao;
 }
 exports.CreateTransportadoraDto = CreateTransportadoraDto;
 __decorate([
@@ -42,6 +50,16 @@ __decorate([
     __metadata("design:type", String)
 ], CreateTransportadoraDto.prototype, "nomeFantasia", void 0);
 __decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateTransportadoraDto.prototype, "iE", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateTransportadoraDto.prototype, "iM", void 0);
+__decorate([
     (0, typeorm_1.Column)({ default: true }),
     (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
@@ -53,6 +71,12 @@ __decorate([
     __metadata("design:type", String)
 ], CreateTransportadoraDto.prototype, "telefone", void 0);
 __decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.Matches)(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/, { message: 'Celular inválido' }),
+    __metadata("design:type", String)
+], CreateTransportadoraDto.prototype, "celular", void 0);
+__decorate([
     (0, class_validator_1.IsEmail)({}, { message: 'Email inválido' }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -61,7 +85,27 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
+], CreateTransportadoraDto.prototype, "site", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
 ], CreateTransportadoraDto.prototype, "endereco", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateTransportadoraDto.prototype, "numero", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateTransportadoraDto.prototype, "bairro", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateTransportadoraDto.prototype, "complemento", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
@@ -79,4 +123,9 @@ __decorate([
     (0, class_validator_1.Matches)(/^\d{5}-?\d{3}$/, { message: 'CEP inválido' }),
     __metadata("design:type", String)
 ], CreateTransportadoraDto.prototype, "cep", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateTransportadoraDto.prototype, "observacao", void 0);
 //# sourceMappingURL=create-transportadora.dto.js.map

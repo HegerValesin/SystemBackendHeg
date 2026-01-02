@@ -24,8 +24,7 @@
     "dev:notifications": "npm run start:dev --workspace=notifications-service",
     "dev:all": "concurrently \"npm:dev:*\"",
     "prisma:generate": "npm run prisma:generate --workspaces",
-    "prisma:migrate": "npm run prisma:migrate --workspaces"
-    ,
+    "prisma:migrate": "npm run prisma:migrate --workspaces",
     "seed:db": "npm --workspace registry-service run seed:db && npm --workspace auth-service run seed:db"
   },
   "author": "Heger Valesin",
