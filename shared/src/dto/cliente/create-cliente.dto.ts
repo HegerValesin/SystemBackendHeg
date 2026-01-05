@@ -1,4 +1,5 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, Matches } from "class-validator";
+import { TypeClient } from "@shared/enums/client/clients.enum";
+import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID, Matches } from "class-validator";
 import { Column } from "typeorm";
 
 export class CreateClienteDto {
@@ -8,8 +9,13 @@ export class CreateClienteDto {
   cnpjCpf!: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Razão Social é obrigatória' })
-  razaoSocial!: string;
+  @IsNotEmpty({ message: 'Tipo é obrigatório' })
+  @IsEnum(TypeClient, { message: 'Tipo inválido' })
+  tipo!: TypeClient;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Nome/Razão Social é obrigatória' })
+  nome!: string;
 
   @IsString()
   @IsOptional()
@@ -17,7 +23,21 @@ export class CreateClienteDto {
 
   @IsString()
   @IsOptional()
+  iE?: string;
+
+  @IsString()
+  @IsOptional()
+  iM?: string;
+
+  @IsString()
+  @IsOptional()
+  @Matches(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/, { message: 'Telefone inválido' })
   telefone?: string;
+
+  @IsString()
+  @IsOptional()
+  @Matches(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/, { message: 'Celular inválido' })
+  celular?: string;
 
   @IsEmail({}, { message: 'Email inválido' })
   @IsOptional()
@@ -25,7 +45,24 @@ export class CreateClienteDto {
 
   @IsString()
   @IsOptional()
+  @Matches(/^\d{5}-?\d{3}$/, { message: 'CEP inválido' })
+  cep?: string;
+
+  @IsString()
+  @IsOptional()
   endereco?: string;
+
+  @IsString()
+  @IsOptional()
+  numero?: string;
+
+  @IsString()
+  @IsOptional()
+  complemento?: string;
+
+  @IsString()
+  @IsOptional()
+  bairro?: string;
 
   @IsString()
   @IsOptional()
@@ -33,11 +70,15 @@ export class CreateClienteDto {
 
   @IsString()
   @IsOptional()
-  estado?: string;
+  uf?: string;
 
   @IsString()
   @IsOptional()
-  cep?: string;
+  observacao?: string;
+
+  @IsString()
+  @IsOptional()
+  site?: string;
 
   @IsUUID()
   @IsNotEmpty({ message: 'TransportadoraId é obrigatório' })

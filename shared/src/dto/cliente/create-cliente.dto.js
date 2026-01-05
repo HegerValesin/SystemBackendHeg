@@ -10,18 +10,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateClienteDto = void 0;
+const clients_enum_1 = require("../../enums/client/clients.enum");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
 class CreateClienteDto {
     cnpjCpf;
-    razaoSocial;
+    tipo;
+    nome;
     nomeFantasia;
+    iE;
+    iM;
     telefone;
+    celular;
     email;
-    endereco;
-    cidade;
-    estado;
     cep;
+    endereco;
+    numero;
+    complemento;
+    bairro;
+    cidade;
+    uf;
+    observacao;
+    site;
     transportadoraId;
     ativo;
 }
@@ -34,9 +44,15 @@ __decorate([
 ], CreateClienteDto.prototype, "cnpjCpf", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)({ message: 'Razão Social é obrigatória' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Tipo é obrigatório' }),
+    (0, class_validator_1.IsEnum)(clients_enum_1.TypeClient, { message: 'Tipo inválido' }),
     __metadata("design:type", String)
-], CreateClienteDto.prototype, "razaoSocial", void 0);
+], CreateClienteDto.prototype, "tipo", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Nome/Razão Social é obrigatória' }),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "nome", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
@@ -46,12 +62,35 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
+], CreateClienteDto.prototype, "iE", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "iM", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.Matches)(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/, { message: 'Telefone inválido' }),
+    __metadata("design:type", String)
 ], CreateClienteDto.prototype, "telefone", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.Matches)(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/, { message: 'Celular inválido' }),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "celular", void 0);
 __decorate([
     (0, class_validator_1.IsEmail)({}, { message: 'Email inválido' }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateClienteDto.prototype, "email", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.Matches)(/^\d{5}-?\d{3}$/, { message: 'CEP inválido' }),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "cep", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
@@ -61,17 +100,37 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
+], CreateClienteDto.prototype, "numero", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "complemento", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "bairro", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
 ], CreateClienteDto.prototype, "cidade", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], CreateClienteDto.prototype, "estado", void 0);
+], CreateClienteDto.prototype, "uf", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], CreateClienteDto.prototype, "cep", void 0);
+], CreateClienteDto.prototype, "observacao", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateClienteDto.prototype, "site", void 0);
 __decorate([
     (0, class_validator_1.IsUUID)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'TransportadoraId é obrigatório' }),
