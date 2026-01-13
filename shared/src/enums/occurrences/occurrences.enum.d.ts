@@ -1,0 +1,33 @@
+export declare enum OccurrenceStatus {
+    DRAFT = "DRAFT",
+    PENDING_DRIVER = "PENDING_DRIVER",
+    PENDING_CONTAINER_INFO = "PENDING_CONTAINER_INFO",
+    CONTAINER_COLLECTED = "CONTAINER_COLLECTED",
+    SENT_TO_CONTRACTOR = "SENT_TO_CONTRACTOR",
+    LOADING_SCHEDULED = "LOADING_SCHEDULED",
+    COMPLETED = "COMPLETED"
+}
+export declare enum ServiceOrderStatus {
+    DRAFT = "DRAFT",
+    PRINTED = "PRINTED",
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    CANCELLED = "CANCELLED"
+}
+export declare enum ContainerStatus {
+    PENDENTE = "PENDING",
+    COLETADO = "COLLECTED",
+    EM_EXECUÇÃO = "IN_TRANSIT",
+    FINALIZADO = "DELIVERED",
+    CANCELADO = "CANCELLED"
+}
+export declare enum OperationStepStatus {
+    PENDENTE = "PENDENTE",
+    EM_EXECUCAO = "EM_EXECUCAO",
+    CONCLUIDA = "CONCLUIDA"
+}
+export declare enum OperationStatus {
+    CRIADA = "CRIADA",
+    EM_EXECUCAO = "EM_EXECUCAO",
+    FINALIZADA = "FINALIZADA"
+}

@@ -17,8 +17,22 @@ export enum OccurrenceStatus {
   }
 
   export enum ContainerStatus {
-    PENDING = 'PENDING',
-    COLLECTED = 'COLLECTED',
-    IN_TRANSIT = 'IN_TRANSIT',
-    DELIVERED = 'DELIVERED',
+    PENDENTE = 'PENDING',
+    COLETADO = 'COLLECTED',
+    EM_EXECUÇÃO = 'IN_TRANSIT',
+    FINALIZADO = 'DELIVERED',
+    CANCELADO = 'CANCELLED',
   }
+
+  export enum OperationStepStatus {
+    PENDENTE = 'PENDENTE',
+    EM_EXECUCAO = 'EM_EXECUCAO',
+    CONCLUIDA = 'CONCLUIDA',
+  }
+  
+  export enum OperationStatus {
+    CRIADA = 'CRIADA',
+    EM_EXECUCAO = 'EM_EXECUCAO',
+    FINALIZADA = 'FINALIZADA',
+  }
+  
