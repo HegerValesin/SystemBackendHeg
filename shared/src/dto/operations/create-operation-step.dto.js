@@ -6,6 +6,17 @@ class CreateOperationStepDto {
     localName;
     scheduledAt;
     stepOrder;
+    scheduledDistributionTime;
+    truckAtGateTime;
+    gateEntryTime;
+    truckAtDockTime;
+    shippingDate;
+    port;
+    bookingNumber;
+    ship;
+    sheduledClient;
+    volumes;
+    observations;
 }
 exports.CreateOperationStepDto = CreateOperationStepDto;
 //# sourceMappingURL=create-operation-step.dto.js.map

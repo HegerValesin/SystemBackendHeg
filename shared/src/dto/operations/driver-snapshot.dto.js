@@ -7,6 +7,10 @@ class DriverSnapshotDto {
     cpf;
     phone;
     cnh;
+    cavaloId;
+    cavaloPlate;
+    carretaId;
+    carretaPlate;
 }
 exports.DriverSnapshotDto = DriverSnapshotDto;
 class ContainerSnapshotDto {

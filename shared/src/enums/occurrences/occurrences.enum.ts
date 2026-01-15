@@ -34,5 +34,6 @@ export enum OccurrenceStatus {
     CRIADA = 'CRIADA',
     EM_EXECUCAO = 'EM_EXECUCAO',
     FINALIZADA = 'FINALIZADA',
+    CANCELADA = 'CANCELADA',
   }
   

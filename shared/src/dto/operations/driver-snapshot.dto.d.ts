@@ -4,6 +4,10 @@ export declare class DriverSnapshotDto {
     cpf: string;
     phone?: string;
     cnh?: string;
+    cavaloId?: string;
+    cavaloPlate?: string;
+    carretaId?: string;
+    carretaPlate?: string;
 }
 export declare class ContainerSnapshotDto {
     containerNumber: string;

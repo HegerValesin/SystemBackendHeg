@@ -38,5 +38,6 @@ var OperationStatus;
     OperationStatus["CRIADA"] = "CRIADA";
     OperationStatus["EM_EXECUCAO"] = "EM_EXECUCAO";
     OperationStatus["FINALIZADA"] = "FINALIZADA";
+    OperationStatus["CANCELADA"] = "CANCELADA";
 })(OperationStatus || (exports.OperationStatus = OperationStatus = {}));
 //# sourceMappingURL=occurrences.enum.js.map

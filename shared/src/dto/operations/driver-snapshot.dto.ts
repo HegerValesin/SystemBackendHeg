@@ -4,6 +4,11 @@ export class DriverSnapshotDto {
   cpf!: string;
   phone?: string;
   cnh?: string;
+  // Veículos selecionados para esta operação
+  cavaloId?: string;
+  cavaloPlate?: string;
+  carretaId?: string;
+  carretaPlate?: string;
 }
 
 export class ContainerSnapshotDto {

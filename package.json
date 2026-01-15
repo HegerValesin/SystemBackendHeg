@@ -23,6 +23,8 @@
     "dev:documents": "npm run start:dev --workspace=documents-service",
     "dev:notifications": "npm run start:dev --workspace=notifications-service",
     "dev:all": "concurrently \"npm:dev:*\"",
+    "clean": "npm run clean --workspaces",
+    "clean:dist": "rimraf gateway/dist auth-service/dist registry-service/dist operations-service/dist documents-service/dist notifications-service/dist",
     "prisma:generate": "npm run prisma:generate --workspaces",
     "prisma:migrate": "npm run prisma:migrate --workspaces",
     "seed:db": "npm --workspace registry-service run seed:db && npm --workspace auth-service run seed:db"
@@ -30,6 +32,7 @@
   "author": "Heger Valesin",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "rimraf": "^6.0.1"
   }
 }
