@@ -1,7 +1,7 @@
 export declare class DriverSnapshotDto {
-    driverId: string;
-    name: string;
-    cpf: string;
+    driverId?: string;
+    name?: string;
+    cpf?: string;
     phone?: string;
     cnh?: string;
     cavaloId?: string;
@@ -10,7 +10,7 @@ export declare class DriverSnapshotDto {
     carretaPlate?: string;
 }
 export declare class ContainerSnapshotDto {
-    containerNumber: string;
+    containerNumber?: string;
     size?: string;
     status?: 'VAZIO' | 'CHEIO';
     tara?: string;

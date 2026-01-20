@@ -1,10 +1,7 @@
 import { IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
-export class CreateOperationStepDto {
-  @IsString()
-  @IsNotEmpty()
-  operationId!: string;
-
+// DTO para criar step inline (sem operationId, pois será preenchido automaticamente)
+export class InlineOperationStepDto {
   @IsString()
   @IsNotEmpty()
   localName!: string;
@@ -62,4 +59,3 @@ export class CreateOperationStepDto {
   @IsOptional()
   observations?: string;
 }
-  

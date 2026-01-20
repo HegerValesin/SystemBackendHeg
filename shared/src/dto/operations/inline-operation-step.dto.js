@@ -9,109 +9,93 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContainerSnapshotDto = exports.DriverSnapshotDto = void 0;
+exports.InlineOperationStepDto = void 0;
 const class_validator_1 = require("class-validator");
-class DriverSnapshotDto {
-    driverId;
-    name;
-    cpf;
-    phone;
-    cnh;
-    cavaloId;
-    cavaloPlate;
-    carretaId;
-    carretaPlate;
+class InlineOperationStepDto {
+    localName;
+    scheduledAt;
+    stepOrder;
+    scheduledDistributionTime;
+    truckAtGateTime;
+    gateEntryTime;
+    truckAtDockTime;
+    shippingDate;
+    port;
+    bookingNumber;
+    ship;
+    sheduledClient;
+    volumes;
+    observations;
 }
-exports.DriverSnapshotDto = DriverSnapshotDto;
+exports.InlineOperationStepDto = InlineOperationStepDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], InlineOperationStepDto.prototype, "localName", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], InlineOperationStepDto.prototype, "scheduledAt", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], InlineOperationStepDto.prototype, "stepOrder", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DriverSnapshotDto.prototype, "driverId", void 0);
+], InlineOperationStepDto.prototype, "scheduledDistributionTime", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DriverSnapshotDto.prototype, "name", void 0);
+], InlineOperationStepDto.prototype, "truckAtGateTime", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DriverSnapshotDto.prototype, "cpf", void 0);
+], InlineOperationStepDto.prototype, "gateEntryTime", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DriverSnapshotDto.prototype, "phone", void 0);
+], InlineOperationStepDto.prototype, "truckAtDockTime", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DriverSnapshotDto.prototype, "cnh", void 0);
+], InlineOperationStepDto.prototype, "shippingDate", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DriverSnapshotDto.prototype, "cavaloId", void 0);
+], InlineOperationStepDto.prototype, "port", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DriverSnapshotDto.prototype, "cavaloPlate", void 0);
+], InlineOperationStepDto.prototype, "bookingNumber", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DriverSnapshotDto.prototype, "carretaId", void 0);
+], InlineOperationStepDto.prototype, "ship", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], DriverSnapshotDto.prototype, "carretaPlate", void 0);
-class ContainerSnapshotDto {
-    containerNumber;
-    size;
-    status;
-    tara;
-    lacre;
-    gensetNumber;
-    armador;
-}
-exports.ContainerSnapshotDto = ContainerSnapshotDto;
+], InlineOperationStepDto.prototype, "sheduledClient", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], InlineOperationStepDto.prototype, "volumes", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], ContainerSnapshotDto.prototype, "containerNumber", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], ContainerSnapshotDto.prototype, "size", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsIn)(['VAZIO', 'CHEIO']),
-    __metadata("design:type", String)
-], ContainerSnapshotDto.prototype, "status", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], ContainerSnapshotDto.prototype, "tara", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], ContainerSnapshotDto.prototype, "lacre", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], ContainerSnapshotDto.prototype, "gensetNumber", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], ContainerSnapshotDto.prototype, "armador", void 0);
-//# sourceMappingURL=driver-snapshot.dto.js.map
+], InlineOperationStepDto.prototype, "observations", void 0);
+//# sourceMappingURL=inline-operation-step.dto.js.map
