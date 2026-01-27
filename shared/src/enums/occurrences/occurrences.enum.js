@@ -35,9 +35,14 @@ var OperationStepStatus;
 })(OperationStepStatus || (exports.OperationStepStatus = OperationStepStatus = {}));
 var OperationStatus;
 (function (OperationStatus) {
-    OperationStatus["CRIADA"] = "CRIADA";
-    OperationStatus["EM_EXECUCAO"] = "EM_EXECUCAO";
-    OperationStatus["FINALIZADA"] = "FINALIZADA";
-    OperationStatus["CANCELADA"] = "CANCELADA";
+    OperationStatus["CRIADA"] = "Created";
+    OperationStatus["COLETADO"] = "Collected";
+    OperationStatus["EM_TRANSITO"] = "In_Transit";
+    OperationStatus["CARREGANDO"] = "Loading";
+    OperationStatus["DESCARREGANDO"] = "Unloading";
+    OperationStatus["ENTREGANDO"] = "Delivering";
+    OperationStatus["DEVOLVENDO"] = "Returning";
+    OperationStatus["FINALIZADA"] = "Finished";
+    OperationStatus["CANCELADA"] = "Cancelled";
 })(OperationStatus || (exports.OperationStatus = OperationStatus = {}));
 //# sourceMappingURL=occurrences.enum.js.map

@@ -27,8 +27,13 @@ export declare enum OperationStepStatus {
     CONCLUIDA = "CONCLUIDA"
 }
 export declare enum OperationStatus {
-    CRIADA = "CRIADA",
-    EM_EXECUCAO = "EM_EXECUCAO",
-    FINALIZADA = "FINALIZADA",
-    CANCELADA = "CANCELADA"
+    CRIADA = "Created",
+    COLETADO = "Collected",
+    EM_TRANSITO = "In_Transit",
+    CARREGANDO = "Loading",
+    DESCARREGANDO = "Unloading",
+    ENTREGANDO = "Delivering",
+    DEVOLVENDO = "Returning",
+    FINALIZADA = "Finished",
+    CANCELADA = "Cancelled"
 }
