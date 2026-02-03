@@ -8,6 +8,7 @@ class GenerateServiceOrderPdfDto {
     osNumber;
     transportadora;
     remetente;
+    destinatario;
 }
 exports.GenerateServiceOrderPdfDto = GenerateServiceOrderPdfDto;
 //# sourceMappingURL=generate-service-order-pdf.dto.js.map

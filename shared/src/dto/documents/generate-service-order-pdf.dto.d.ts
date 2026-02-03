@@ -30,6 +30,7 @@ export declare class GenerateServiceOrderPdfDto {
         status?: OperationStatus;
         operationType?: OperationType;
         facilityCollectedId?: string;
+        facilityDestinationId?: string;
         montagem?: string;
         createdAt?: string;
         updatedAt?: string;
@@ -72,7 +73,23 @@ export declare class GenerateServiceOrderPdfDto {
         email?: string;
     };
     remetente: {
+        nome: string;
+        cnpjCpf?: string;
+        endereco?: string;
+        numero?: string;
+        complemento?: string;
+        bairro?: string;
+        cidade?: string;
+        uf?: string;
+    };
+    destinatario?: {
         name: string;
-        cnpj?: string;
+        cnpjCpf?: string;
+        endereco?: string;
+        numero?: string;
+        complemento?: string;
+        bairro?: string;
+        cidade?: string;
+        uf?: string;
     };
 }
