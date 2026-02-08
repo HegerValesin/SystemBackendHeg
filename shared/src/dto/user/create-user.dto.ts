@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional } from "class-validator";
+import { IsArray, IsEmail, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
 import { UserRole, UserStatus } from "@shared/enums/auth/user.enum";
 
 export class CreateUserDto {
@@ -20,8 +20,14 @@ export class CreateUserDto {
   @IsNotEmpty({ message: "Status é obrigatório" })
   status!: UserStatus;
   
+  @IsArray()
+  @IsUUID(undefined, { each: true })
   @IsNotEmpty({ message: "Transportadora é obrigatória" })
-  transportadoraId!: string;
+  transportadoraIds!: string[];
+
+  @IsOptional()
+  @IsUUID()
+  transportadoraId?: string;
   
   @IsOptional()
   refreshToken?: string;

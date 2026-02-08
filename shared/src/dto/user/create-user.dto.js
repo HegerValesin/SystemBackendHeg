@@ -19,6 +19,7 @@ class CreateUserDto {
     telefone;
     role;
     status;
+    transportadoraIds;
     transportadoraId;
     refreshToken;
     tokenExpiresAt;
@@ -52,7 +53,14 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "status", void 0);
 __decorate([
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsUUID)(undefined, { each: true }),
     (0, class_validator_1.IsNotEmpty)({ message: "Transportadora é obrigatória" }),
+    __metadata("design:type", Array)
+], CreateUserDto.prototype, "transportadoraIds", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsUUID)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "transportadoraId", void 0);
 __decorate([

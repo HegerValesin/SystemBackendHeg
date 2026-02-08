@@ -6,7 +6,8 @@ export declare class CreateUserDto {
     telefone?: string;
     role: UserRole;
     status: UserStatus;
-    transportadoraId: string;
+    transportadoraIds: string[];
+    transportadoraId?: string;
     refreshToken?: string;
     tokenExpiresAt?: Date;
     lastLoginAt?: Date;
