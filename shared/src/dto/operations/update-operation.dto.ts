@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEnum, IsOptional, ValidateNested } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsOptional, ValidateNested, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
   ContainerSnapshotDto,
@@ -6,6 +6,7 @@ import {
 } from "./driver-snapshot.dto";
 import { OperationType } from "@shared/enums/operations/operation-type.enum";
 import { OperationStatus } from "@shared/enums/occurrences/occurrences.enum";
+import { OperationInvoiceItemDto } from './set-operation-invoices.dto';
 
 export class UpdateOperationDto {
   @IsString()
@@ -33,4 +34,10 @@ export class UpdateOperationDto {
   @IsEnum(OperationStatus)
   @IsOptional()
   status?: OperationStatus;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => OperationInvoiceItemDto)
+  @IsOptional()
+  invoices?: OperationInvoiceItemDto[];
 }
