@@ -69,6 +69,19 @@ services:
     volumes:
       - redis-data:/data
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: hegervfp
+      MINIO_ROOT_PASSWORD: enzo2003*
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+
 volumes:
   postgres-auth-data:
   postgres-registry-data:
@@ -76,3 +89,4 @@ volumes:
   postgres-documents-data:
   postgres-notifications-data:
   redis-data:
+  minio-data:
