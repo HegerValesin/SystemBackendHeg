@@ -28,6 +28,10 @@ export class CreateUserDto {
   @IsOptional()
   @IsUUID()
   transportadoraId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  motoristaId?: string;
   
   @IsOptional()
   refreshToken?: string;

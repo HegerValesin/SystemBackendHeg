@@ -272,7 +272,7 @@ services:
       OPERATIONS_SERVICE_PORT: 3003
       DOCUMENTS_SERVICE_HOST: documents-service
       DOCUMENTS_SERVICE_PORT: 3004
-      CORS_ORIGIN: http://localhost:8080,http://localhost:3000,http://192.168.1.10:3000
+      CORS_ORIGIN: http://localhost:8080,http://localhost:3000,http://192.168.1.10:3000,exp://192.168.1.10:8081,http://192.168.1.10:8080
     ports:
       - '3000:3000'
     volumes:
