@@ -183,7 +183,7 @@ services:
       REGISTRY_SERVICE_PORT: 3002
       DOCUMENTS_SERVICE_HOST: documents-service
       DOCUMENTS_SERVICE_PORT: 3004
-      MINIO_ENDPOINT: minio
+      MINIO_ENDPOINT: 192.168.1.10
       MINIO_PORT: 9000
       MINIO_USE_SSL: 'false'
       MINIO_ACCESS_KEY: hegervfp
