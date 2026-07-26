@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run validate
+      - run: docker compose -f docker-compose.yml config --quiet
+      - run: docker compose -f docker-compose.prod.yml config --quiet
+        env:
+          POSTGRES_PASSWORD: ci-password
+          MINIO_ROOT_PASSWORD: ci-password
+          RABBITMQ_DEFAULT_PASS: ci-password
+      - run: docker compose -f docker-compose-services.yml config --quiet
+
+  rabbitmq-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci-password
+          POSTGRES_DB: documents_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d documents_db"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+      rabbitmq:
+        image: rabbitmq:3.13-management-alpine
+        env:
+          RABBITMQ_DEFAULT_USER: ci
+          RABBITMQ_DEFAULT_PASS: ci-password
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 10s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:ci-password@localhost:5432/documents_db
+      RABBITMQ_URL: amqp://ci:ci-password@localhost:5672
+      RUN_RABBITMQ_INTEGRATION: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run migration:run --workspace=documents-service
+      - run: npm run test:rabbitmq-integration --workspace=documents-service

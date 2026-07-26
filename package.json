@@ -12,7 +12,6 @@
     "registry-service",
     "operations-service",
     "documents-service",
-    "notifications-service",
     "shared"
   ],
   "scripts": {
@@ -22,10 +21,14 @@
     "dev:registry": "npm run start:dev --workspace=registry-service",
     "dev:operations": "npm run start:dev --workspace=operations-service",
     "dev:documents": "npm run start:dev --workspace=documents-service",
-    "dev:notifications": "npm run start:dev --workspace=notifications-service",
     "dev:all": "concurrently \"npm:dev:*\"",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present -- --runInBand --passWithNoTests",
+    "quality:report": "npm run lint",
+    "validate": "npm run test && npm run build",
     "clean": "npm run clean --workspaces",
-    "clean:dist": "rimraf gateway/dist auth-service/dist registry-service/dist operations-service/dist documents-service/dist notifications-service/dist",
+    "clean:dist": "rimraf gateway/dist auth-service/dist registry-service/dist operations-service/dist documents-service/dist shared/dist",
     "prisma:generate": "npm run prisma:generate --workspaces",
     "prisma:migrate": "npm run prisma:migrate --workspaces",
     "seed:db": "npm --workspace registry-service run seed:db && npm --workspace auth-service run seed:db"

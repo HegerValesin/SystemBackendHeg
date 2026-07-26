@@ -4,7 +4,7 @@ echo "🧹 Limpando node_modules e package-lock..."
 rm -rf */node_modules */package-lock.json
 
 echo "📦 Instalando dependências..."
-services=("auth-service" "registry-service" "gateway" "operations-service" "documents-service" "notifications-service")
+services=("auth-service" "registry-service" "gateway" "operations-service" "documents-service")
 
 # for service in "${services[@]}"; do
 #   if [ -d "$service" ]; then

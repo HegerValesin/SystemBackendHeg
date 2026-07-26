@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
+import { OperationDocumentType } from '@shared/enums/operations/document-type.enum';
 
 export class UploadDocumentDto {
   @IsString()
@@ -12,4 +13,8 @@ export class UploadDocumentDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsEnum(OperationDocumentType)
+  @IsOptional()
+  documentType?: OperationDocumentType;
 }

@@ -32,13 +32,20 @@ export enum OccurrenceStatus {
   
   export enum OperationStatus {
     CRIADA = 'Created',
+    COLETANDO_CONTAINER = 'Collecting_Container',
+    RETIRANDO_CONTAINER = 'Picking_Up_Container',
     COLETADO = 'Collected',
     EM_TRANSITO = 'In_Transit',
+    EM_TRANSITO_PARA_CLIENTE = 'In_Transit_To_Client',
+    NO_CLIENTE = 'At_Client',
     CARREGANDO = 'Loading',
+    CARREGADO = 'Loaded',
     DESCARREGANDO = 'Unloading',
+    DESCARREGADO = 'Unloaded',
+    AGENDADO_NO_PORTO = 'Port_Scheduled',
+    ENTREGA_PORTO = 'Port_Delivery',
     ENTREGANDO = 'Delivering',
     DEVOLVENDO = 'Returning',
     FINALIZADA = 'Finished',
     CANCELADA = 'Cancelled',
   }
-  

@@ -1,0 +1,51 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY gateway/package*.json ./gateway/
+COPY auth-service/package*.json ./auth-service/
+COPY registry-service/package*.json ./registry-service/
+COPY operations-service/package*.json ./operations-service/
+COPY documents-service/package*.json ./documents-service/
+COPY shared/package*.json ./shared/
+
+RUN npm ci
+
+COPY . .
+
+ARG SERVICE
+
+RUN npm run build --workspace shared \
+  && if [ "$SERVICE" = "auth-service" ]; then npm --prefix auth-service run build --ignore-scripts; else npm run build --workspace ${SERVICE}; fi \
+  && npm prune --omit=dev
+
+
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+ARG SERVICE
+ARG SERVICE_PORT
+
+ENV NODE_ENV=production
+ENV SERVICE=${SERVICE}
+ENV SERVICE_PORT=${SERVICE_PORT}
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/shared ./shared
+COPY --from=builder /app/${SERVICE}/package*.json ./${SERVICE}/
+COPY --from=builder /app/${SERVICE}/dist ./${SERVICE}/dist
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
+  && chown -R appuser:appgroup /app
+
+USER appuser
+
+EXPOSE ${SERVICE_PORT}
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD node -e "const net=require('net');const socket=net.connect({host:'127.0.0.1',port:Number(process.env.SERVICE_PORT)});socket.on('connect',()=>socket.end(()=>process.exit(0)));socket.on('error',()=>process.exit(1));setTimeout(()=>process.exit(1),4000)"
+
+CMD ["sh", "-c", "if [ -f \"${SERVICE}/dist/main.js\" ]; then node \"${SERVICE}/dist/main.js\"; elif [ -f \"${SERVICE}/dist/${SERVICE}/src/main.js\" ]; then node \"${SERVICE}/dist/${SERVICE}/src/main.js\"; else echo \"Arquivo de entrada não encontrado para ${SERVICE}\" && ls -la \"${SERVICE}/dist\" && exit 1; fi"]

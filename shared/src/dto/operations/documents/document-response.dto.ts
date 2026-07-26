@@ -6,6 +6,7 @@ export class DocumentResponseDto {
   fileType!: string;
   fileSize!: number;
   description?: string;
+  documentType?: string;
   createdAt!: Date;
   updatedAt!: Date;
   isActive!: boolean;
