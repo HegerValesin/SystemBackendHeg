@@ -1,17 +1,30 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
-import { UserRole } from '../../enums/auth/user.enum';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Matches,
+  MinLength,
+} from "class-validator";
+import { UserRole } from "../../enums/auth/user.enum";
 
 export class RegisterDto {
-  @IsEmail({}, { message: 'Email inválido' })
-  @IsNotEmpty({ message: 'Email é obrigatório' })
+  @IsString()
+  @Matches(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, { message: "CPF inválido" })
+  cpf!: string;
+
+  @IsEmail({}, { message: "Email inválido" })
+  @IsNotEmpty({ message: "Email é obrigatório" })
   email!: string;
 
   @IsString()
-  @MinLength(6, { message: 'Senha deve ter no mínimo 6 caracteres' })
+  @MinLength(6, { message: "Senha deve ter no mínimo 6 caracteres" })
   senha!: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Nome é obrigatório' })
+  @IsNotEmpty({ message: "Nome é obrigatório" })
   nome!: string;
 
   @IsString()
@@ -22,6 +35,6 @@ export class RegisterDto {
   role!: UserRole;
 
   @IsUUID()
-  @IsNotEmpty({ message: 'TransportadoraId é obrigatório' })
+  @IsNotEmpty({ message: "TransportadoraId é obrigatório" })
   transportadoraId!: string;
 }

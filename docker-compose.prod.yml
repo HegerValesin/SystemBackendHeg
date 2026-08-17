@@ -1,253 +1,88 @@
 services:
-  postgres-auth:
+  postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD_required}
-      POSTGRES_DB: auth_db
+      POSTGRES_DB: ${POSTGRES_DB:-logistica_db}
     volumes:
-      - postgres-auth-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres} -d auth_db']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-registry:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD_required}
-      POSTGRES_DB: registry_db
-    volumes:
-      - postgres-registry-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres} -d registry_db']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-operations:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD_required}
-      POSTGRES_DB: operations_db
-    volumes:
-      - postgres-operations-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres} -d operations_db']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-documents:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD_required}
-      POSTGRES_DB: documents_db
-    volumes:
-      - postgres-documents-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres} -d documents_db']
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
       interval: 10s
       timeout: 5s
       retries: 5
 
   minio:
     image: minio/minio
+    restart: unless-stopped
+    command: server /data --console-address ':9001'
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD_required}
-    command: server /data --console-address ":9001"
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:?MINIO_ACCESS_KEY_required}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:?MINIO_SECRET_KEY_required}
     volumes:
       - minio-data:/data
-    ports:
-      - '9000:9000'
-      - '9001:9001'
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
-      interval: 15s
-      timeout: 5s
-      retries: 5
 
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
+    restart: unless-stopped
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-logistica}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:?RABBITMQ_DEFAULT_PASS_required}
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-    healthcheck:
-      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
-  auth-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
-      args:
-        SERVICE: auth-service
-        SERVICE_PORT: 3001
-    environment:
-      NODE_ENV: production
-      TCP_HOST: 0.0.0.0
-      TCP_PORT: 3001
-      DB_HOST: postgres-auth
-      DB_PORT: 5432
-      DB_USERNAME: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD_required}
-      DB_DATABASE: auth_db
-      REGISTRY_SERVICE_HOST: registry-service
-      REGISTRY_SERVICE_PORT: 3002
-    ports:
-      - '3001:3001'
-    depends_on:
-      postgres-auth:
-        condition: service_healthy
-      registry-service:
-        condition: service_started
-
-  registry-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
-      args:
-        SERVICE: registry-service
-        SERVICE_PORT: 3002
-    environment:
-      NODE_ENV: production
-      TCP_HOST: 0.0.0.0
-      TCP_PORT: 3002
-      DB_HOST: postgres-registry
-      DB_PORT: 5432
-      DB_USERNAME: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD_required}
-      DB_DATABASE: registry_db
-    ports:
-      - '3002:3002'
-    depends_on:
-      postgres-registry:
-        condition: service_healthy
-
-  operations-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
-      args:
-        SERVICE: operations-service
-        SERVICE_PORT: 3003
-    environment:
-      NODE_ENV: production
-      TCP_HOST: 0.0.0.0
-      TCP_PORT: 3003
-      DB_HOST: postgres-operations
-      DB_PORT: 5432
-      DB_USERNAME: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD_required}
-      DB_DATABASE: operations_db
-      REGISTRY_SERVICE_HOST: registry-service
-      REGISTRY_SERVICE_PORT: 3002
-      DOCUMENTS_SERVICE_HOST: documents-service
-      DOCUMENTS_SERVICE_PORT: 3004
-      MINIO_ENDPOINT: minio
-      MINIO_PORT: 9000
-      MINIO_USE_SSL: 'false'
-      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minio}
-      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD_required}
-      MINIO_BUCKET: documents
-      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-logistica}:${RABBITMQ_DEFAULT_PASS:?RABBITMQ_DEFAULT_PASS_required}@rabbitmq:5672
-      OUTBOX_LOCK_TIMEOUT_MS: ${OUTBOX_LOCK_TIMEOUT_MS:-60000}
-    ports:
-      - '3003:3003'
-    depends_on:
-      postgres-operations:
-        condition: service_healthy
-      registry-service:
-        condition: service_started
-      documents-service:
-        condition: service_started
-      minio:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-
-  documents-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
-      args:
-        SERVICE: documents-service
-        SERVICE_PORT: 3004
-    environment:
-      NODE_ENV: production
-      TCP_HOST: 0.0.0.0
-      TCP_PORT: 3004
-      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD_required}@postgres-documents:5432/documents_db
-      OPERATIONS_SERVICE_HOST: operations-service
-      OPERATIONS_SERVICE_PORT: 3003
-      REGISTRY_SERVICE_HOST: registry-service
-      REGISTRY_SERVICE_PORT: 3002
-      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-logistica}:${RABBITMQ_DEFAULT_PASS:?RABBITMQ_DEFAULT_PASS_required}@rabbitmq:5672
-      MINIO_ENDPOINT: minio
-      MINIO_PORT: 9000
-      MINIO_USE_SSL: 'false'
-      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minio}
-      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD_required}
-      MINIO_BUCKET: documents
-      MINIO_REGION: us-east-1
-      RABBITMQ_MAX_RETRIES: ${RABBITMQ_MAX_RETRIES:-3}
-      RABBITMQ_RETRY_DELAY_MS: ${RABBITMQ_RETRY_DELAY_MS:-10000}
-      RABBITMQ_DLQ_ALERT_THRESHOLD: ${RABBITMQ_DLQ_ALERT_THRESHOLD:-1}
-      RABBITMQ_MONITOR_INTERVAL_MS: ${RABBITMQ_MONITOR_INTERVAL_MS:-60000}
-    ports:
-      - '3004:3004'
-    depends_on:
-      postgres-documents:
-        condition: service_healthy
-      registry-service:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
-
-  gateway:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile.prod
       args:
         SERVICE: gateway
         SERVICE_PORT: 3000
+    restart: unless-stopped
     environment:
       NODE_ENV: production
       PORT: 3000
-      AUTH_SERVICE_HOST: auth-service
+      MONOLITH_TCP_HOST: 0.0.0.0
+      MONOLITH_TCP_PORT: 3001
+      AUTH_SERVICE_HOST: 127.0.0.1
       AUTH_SERVICE_PORT: 3001
-      REGISTRY_SERVICE_HOST: registry-service
-      REGISTRY_SERVICE_PORT: 3002
-      OPERATIONS_SERVICE_HOST: operations-service
-      OPERATIONS_SERVICE_PORT: 3003
-      DOCUMENTS_SERVICE_HOST: documents-service
-      DOCUMENTS_SERVICE_PORT: 3004
-      CORS_ORIGIN: ${CORS_ORIGIN:-https://transporte.hedsistemas.dev.br}
+      REGISTRY_SERVICE_HOST: 127.0.0.1
+      REGISTRY_SERVICE_PORT: 3001
+      OPERATIONS_SERVICE_HOST: 127.0.0.1
+      OPERATIONS_SERVICE_PORT: 3001
+      DOCUMENTS_SERVICE_HOST: 127.0.0.1
+      DOCUMENTS_SERVICE_PORT: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_DATABASE: ${POSTGRES_DB:-logistica_db}
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-logistica_db}
+      DB_SYNCHRONIZE: 'false'
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET_required}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-15m}
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_USE_SSL: 'false'
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET:-documents}
+      MINIO_REGION: ${MINIO_REGION:-us-east-1}
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-logistica}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672
+      CORS_ORIGIN: ${CORS_ORIGIN:?CORS_ORIGIN_required}
     ports:
       - '3000:3000'
     depends_on:
-      auth-service:
+      postgres:
+        condition: service_healthy
+      minio:
         condition: service_started
-      registry-service:
-        condition: service_started
-      operations-service:
-        condition: service_started
-      documents-service:
+      rabbitmq:
         condition: service_started
 
 volumes:
-  postgres-auth-data:
-  postgres-registry-data:
-  postgres-operations-data:
-  postgres-documents-data:
+  postgres-data:
   minio-data:
   rabbitmq-data:

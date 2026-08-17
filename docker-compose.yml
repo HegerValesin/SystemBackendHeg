@@ -1,275 +1,97 @@
 services:
-  postgres-auth:
+  postgres:
     image: postgres:16-alpine
-    container_name: postgres-auth
+    container_name: logistica-postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: enzo2003*
-      POSTGRES_DB: auth_db
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env}
+      POSTGRES_DB: ${POSTGRES_DB:-logistica_db}
     ports:
       - '5432:5432'
     volumes:
-      - postgres-auth-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d auth_db']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-registry:
-    image: postgres:16-alpine
-    container_name: postgres-registry
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: enzo2003*
-      POSTGRES_DB: registry_db
-    ports:
-      - '5433:5432'
-    volumes:
-      - postgres-registry-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d registry_db']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-operations:
-    image: postgres:16-alpine
-    container_name: postgres-operations
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: enzo2003*
-      POSTGRES_DB: operations_db
-    ports:
-      - '5434:5432'
-    volumes:
-      - postgres-operations-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d operations_db']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-documents:
-    image: postgres:16-alpine
-    container_name: postgres-documents
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: enzo2003*
-      POSTGRES_DB: documents_db
-    ports:
-      - '5435:5432'
-    volumes:
-      - postgres-documents-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d documents_db']
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
       interval: 10s
       timeout: 5s
       retries: 5
 
   minio:
     image: minio/minio
-    container_name: minio
+    container_name: logistica-minio
     environment:
-      MINIO_ROOT_USER: hegervfp
-      MINIO_ROOT_PASSWORD: enzo2003*
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:?Defina MINIO_ACCESS_KEY no arquivo .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:?Defina MINIO_SECRET_KEY no arquivo .env}
     ports:
       - '9000:9000'
       - '9001:9001'
-    command: server /data --console-address ":9001"
+    command: server /data --console-address ':9001'
     volumes:
       - minio-data:/data
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
-      interval: 15s
-      timeout: 5s
-      retries: 5
 
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
-    container_name: rabbitmq
+    container_name: logistica-rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-logistica}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-change-me}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:?Defina RABBITMQ_DEFAULT_PASS no arquivo .env}
     ports:
       - '5672:5672'
       - '15672:15672'
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-    healthcheck:
-      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
-  auth-service:
+  backend:
     image: node:20-alpine
-    container_name: auth-service
+    container_name: logistica-backend
     working_dir: /app
-    command: sh -c "npm install && npm run start:dev --workspace=auth-service"
-    environment:
-      NODE_ENV: development
-      TCP_HOST: 0.0.0.0
-      TCP_PORT: 3001
-      DB_HOST: postgres-auth
-      DB_PORT: 5432
-      DB_USERNAME: postgres
-      DB_PASSWORD: enzo2003*
-      DB_DATABASE: auth_db
-      REGISTRY_SERVICE_HOST: registry-service
-      REGISTRY_SERVICE_PORT: 3002
-    ports:
-      - '3001:3001'
-    volumes:
-      - ./:/app
-      - /app/node_modules
-    depends_on:
-      postgres-auth:
-        condition: service_healthy
-      registry-service:
-        condition: service_started
-
-  registry-service:
-    image: node:20-alpine
-    container_name: registry-service
-    working_dir: /app
-    command: sh -c "npm install && npm run start:dev --workspace=registry-service"
-    environment:
-      NODE_ENV: development
-      TCP_HOST: 0.0.0.0
-      TCP_PORT: 3002
-      DB_HOST: postgres-registry
-      DB_PORT: 5432
-      DB_USERNAME: postgres
-      DB_PASSWORD: enzo2003*
-      DB_DATABASE: registry_db
-    ports:
-      - '3002:3002'
-    volumes:
-      - ./:/app
-      - /app/node_modules
-    depends_on:
-      postgres-registry:
-        condition: service_healthy
-
-  operations-service:
-    image: node:20-alpine
-    container_name: operations-service
-    working_dir: /app
-    command: sh -c "npm install && npm run start:dev --workspace=operations-service"
-    environment:
-      NODE_ENV: development
-      TCP_HOST: 0.0.0.0
-      TCP_PORT: 3003
-      DB_HOST: postgres-operations
-      DB_PORT: 5432
-      DB_USERNAME: postgres
-      DB_PASSWORD: enzo2003*
-      DB_DATABASE: operations_db
-      REGISTRY_SERVICE_HOST: registry-service
-      REGISTRY_SERVICE_PORT: 3002
-      DOCUMENTS_SERVICE_HOST: documents-service
-      DOCUMENTS_SERVICE_PORT: 3004
-      MINIO_ENDPOINT: host.docker.internal
-      MINIO_PORT: 9000
-      MINIO_USE_SSL: 'false'
-      MINIO_ACCESS_KEY: hegervfp
-      MINIO_SECRET_KEY: enzo2003*
-      MINIO_BUCKET: documents
-      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-logistica}:${RABBITMQ_DEFAULT_PASS:-change-me}@rabbitmq:5672
-      OUTBOX_LOCK_TIMEOUT_MS: ${OUTBOX_LOCK_TIMEOUT_MS:-60000}
-    ports:
-      - '3003:3003'
-    volumes:
-      - ./:/app
-      - /app/node_modules
-    depends_on:
-      postgres-operations:
-        condition: service_healthy
-      registry-service:
-        condition: service_started
-      documents-service:
-        condition: service_started
-      minio:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-
-  documents-service:
-    image: node:20-alpine
-    container_name: documents-service
-    working_dir: /app
-    command: sh -c "npm install && npm run start:dev --workspace=documents-service"
-    environment:
-      NODE_ENV: development
-      TCP_HOST: 0.0.0.0
-      TCP_PORT: 3004
-      DATABASE_URL: postgres://postgres:enzo2003*@postgres-documents:5432/documents_db
-      OPERATIONS_SERVICE_HOST: operations-service
-      OPERATIONS_SERVICE_PORT: 3003
-      REGISTRY_SERVICE_HOST: registry-service
-      REGISTRY_SERVICE_PORT: 3002
-      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-logistica}:${RABBITMQ_DEFAULT_PASS:-change-me}@rabbitmq:5672
-      MINIO_ENDPOINT: host.docker.internal
-      MINIO_PORT: 9000
-      MINIO_USE_SSL: 'false'
-      MINIO_ACCESS_KEY: hegervfp
-      MINIO_SECRET_KEY: enzo2003*
-      MINIO_BUCKET: documents
-      MINIO_REGION: us-east-1
-      RABBITMQ_MAX_RETRIES: ${RABBITMQ_MAX_RETRIES:-3}
-      RABBITMQ_RETRY_DELAY_MS: ${RABBITMQ_RETRY_DELAY_MS:-10000}
-      RABBITMQ_DLQ_ALERT_THRESHOLD: ${RABBITMQ_DLQ_ALERT_THRESHOLD:-1}
-      RABBITMQ_MONITOR_INTERVAL_MS: ${RABBITMQ_MONITOR_INTERVAL_MS:-60000}
-    ports:
-      - '3004:3004'
-    volumes:
-      - ./:/app
-      - /app/node_modules
-    depends_on:
-      postgres-documents:
-        condition: service_healthy
-      registry-service:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
-
-  gateway:
-    image: node:20-alpine
-    container_name: gateway
-    working_dir: /app
-    command: sh -c "npm install && npm run start:dev --workspace=gateway"
+    command: sh -c 'npm install && npm run dev:monolith'
     environment:
       NODE_ENV: development
       PORT: 3000
-      AUTH_SERVICE_HOST: auth-service
+      MONOLITH_TCP_HOST: 0.0.0.0
+      MONOLITH_TCP_PORT: 3001
+      AUTH_SERVICE_HOST: 127.0.0.1
       AUTH_SERVICE_PORT: 3001
-      REGISTRY_SERVICE_HOST: registry-service
-      REGISTRY_SERVICE_PORT: 3002
-      OPERATIONS_SERVICE_HOST: operations-service
-      OPERATIONS_SERVICE_PORT: 3003
-      DOCUMENTS_SERVICE_HOST: documents-service
-      DOCUMENTS_SERVICE_PORT: 3004
-      CORS_ORIGIN: https://transporte.hedsistemas.dev.br, https://api.hedsistemas.dev.br, http://localhost:3000,http://192.168.1.10:3000,http://192.168.193.28:8081
+      REGISTRY_SERVICE_HOST: 127.0.0.1
+      REGISTRY_SERVICE_PORT: 3001
+      OPERATIONS_SERVICE_HOST: 127.0.0.1
+      OPERATIONS_SERVICE_PORT: 3001
+      DOCUMENTS_SERVICE_HOST: 127.0.0.1
+      DOCUMENTS_SERVICE_PORT: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_DATABASE: ${POSTGRES_DB:-logistica_db}
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-logistica_db}
+      # Use true somente para criar um banco local vazio. Em produção use migrations.
+      DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-true}
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET no arquivo .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-15m}
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_USE_SSL: 'false'
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET:-documents}
+      MINIO_REGION: ${MINIO_REGION:-us-east-1}
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-logistica}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080,http://localhost:3000}
     ports:
       - '3000:3000'
     volumes:
       - ./:/app
       - /app/node_modules
     depends_on:
-      auth-service:
+      postgres:
+        condition: service_healthy
+      minio:
         condition: service_started
-      registry-service:
-        condition: service_started
-      operations-service:
-        condition: service_started
-      documents-service:
+      rabbitmq:
         condition: service_started
 
 volumes:
-  postgres-auth-data:
-  postgres-registry-data:
-  postgres-operations-data:
-  postgres-documents-data:
+  postgres-data:
   minio-data:
   rabbitmq-data:

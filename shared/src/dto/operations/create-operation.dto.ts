@@ -19,6 +19,18 @@ export class CreateOperationDto {
   @IsOptional()
   facilityCollectedId?: string;
 
+  @IsString()
+  @IsOptional()
+  montagem?: string;
+
+  @IsString()
+  @IsOptional()
+  cteNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  mdfeNumber?: string;
+
   @ValidateNested()
   @Type(() => DriverSnapshotDto)
   @IsNotEmpty()

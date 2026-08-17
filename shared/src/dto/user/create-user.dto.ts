@@ -1,7 +1,19 @@
-import { IsArray, IsEmail, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
+import {
+  IsArray,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Matches,
+} from "class-validator";
 import { UserRole, UserStatus } from "@shared/enums/auth/user.enum";
 
 export class CreateUserDto {
+  @IsString()
+  @Matches(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, { message: "CPF inválido" })
+  cpf!: string;
+
   @IsEmail({}, { message: "Email inválido" })
   email!: string;
 
@@ -16,10 +28,10 @@ export class CreateUserDto {
 
   @IsNotEmpty({ message: "Role é obrigatório" })
   role!: UserRole;
-  
+
   @IsNotEmpty({ message: "Status é obrigatório" })
   status!: UserStatus;
-  
+
   @IsArray()
   @IsUUID(undefined, { each: true })
   @IsNotEmpty({ message: "Transportadora é obrigatória" })
@@ -32,19 +44,19 @@ export class CreateUserDto {
   @IsOptional()
   @IsUUID()
   motoristaId?: string;
-  
+
   @IsOptional()
   refreshToken?: string;
-  
+
   @IsOptional()
   tokenExpiresAt?: Date;
-  
+
   @IsOptional()
   lastLoginAt?: Date;
-  
+
   @IsOptional()
   createdAt?: Date;
-  
+
   @IsOptional()
   updatedAt?: Date;
 }
